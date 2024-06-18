@@ -48,5 +48,32 @@ namespace CRUD_MVC.Controllers
             }
             return View(olista);
         }
+
+        public ActionResult Registrar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Registrar(Contacto contacto)
+        {
+
+            using (SqlConnection oconexion = new SqlConnection(conexion))
+            {
+                SqlCommand cmd = new SqlCommand("sp_Registrar", oconexion);
+                cmd.Parameters.AddWithValue("Nombre", contacto.Nombre);
+                cmd.Parameters.AddWithValue("Apellido", contacto.Apellido);
+                cmd.Parameters.AddWithValue("Numero", contacto.Numero);
+                cmd.Parameters.AddWithValue("Correo", contacto.Correo);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                oconexion.Open();
+                cmd.ExecuteNonQuery();
+
+            }
+
+            return RedirectToAction("Inicio", "Contacto");
+        }
     }
+
 }
