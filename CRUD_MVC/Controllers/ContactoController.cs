@@ -66,9 +66,16 @@ namespace CRUD_MVC.Controllers
                 cmd.Parameters.AddWithValue("Numero", contacto.Numero);
                 cmd.Parameters.AddWithValue("Correo", contacto.Correo);
 
-                cmd.CommandType = CommandType.StoredProcedure;
-                oconexion.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    oconexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                }
 
             }
 
@@ -102,15 +109,59 @@ namespace CRUD_MVC.Controllers
                 cmd.Parameters.AddWithValue("Numero", contacto.Numero);
                 cmd.Parameters.AddWithValue("Correo", contacto.Correo);
 
-                cmd.CommandType = CommandType.StoredProcedure;
-                oconexion.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    oconexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                }
 
             }
 
             return RedirectToAction("Inicio", "Contacto");
         }
 
+        public ActionResult Eliminar(int? idcontacto)
+        {
+            if (idcontacto == null)
+                return RedirectToAction("Inicio", "Contacto");
+
+            Contacto contacto = olista.Where(c => c.IdContacto == idcontacto).FirstOrDefault();
+
+
+            return View(contacto);
+
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(string IdContacto)
+        {
+
+            using (SqlConnection oconexion = new SqlConnection(conexion))
+            {
+                SqlCommand cmd = new SqlCommand("sp_Eliminar", oconexion);
+
+                cmd.Parameters.AddWithValue("IdContacto", IdContacto);
+
+                try
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    oconexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                }
+
+            }
+
+            return RedirectToAction("Inicio", "Contacto");
+        }
 
 
     }
